@@ -22,22 +22,16 @@ Todos.TodosController = Ember.ArrayController.extend({
             // save newly created model
             todo.save();
         }
-    }
-});
-
-Todos.TodoController = Ember.ObjectController.extend({
-    isCompleted: function(key, value){
-        var model = this.get('model');
-
-        if(value == undefined) {
-            // property being used as getter
-            return model.get('isCompleted');
-        } else {
-            // property being used for setter
-            model.set('isCompleted', value);
-            model.save();
-            return value;
-        }
-    }.property('model.isCompleted')
+    },
     
+    remaining: function(){
+        return this.filterBy('isCompleted', false).get('length');
+    }.property('@each.isCompleted'),
+
+    inflection: function() {
+        var remaining = this.get('remaining');
+        return remaining == 1 ? 'item' : 'items';
+    }.property('remaining')
 });
+
+
